@@ -2,11 +2,11 @@ import { useState } from "react";
 
 const Header = ({ course }) => <h1>{course}</h1>;
 
-const Option = ({ option, count }) => {
-  if (isNaN(count)) return null;
+const StatisticLine = ({ text, value, percent }) => {
+  if (isNaN(value)) return null;
   return (
     <p>
-      {option} {count}
+      {text} {value} {percent}
     </p>
   );
 };
@@ -22,12 +22,12 @@ const Statistics = ({ good, neutral, bad, total, score }) => {
   return (
     <>
       <h1>statistics</h1>
-      <Option option="good" count={good} />
-      <Option option="neutral" count={neutral} />
-      <Option option="bad" count={bad} />
-      <Option option="all" count={total} />
-      <Option option="average" count={average} />
-      <Option option="positive" count={positive} />
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={total} />
+      <StatisticLine text="average" value={average} />
+      <StatisticLine text="positive" value={positive} percent="%" />
     </>
   );
 };
