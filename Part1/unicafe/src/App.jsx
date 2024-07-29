@@ -5,9 +5,16 @@ const Header = ({ course }) => <h1>{course}</h1>;
 const StatisticLine = ({ text, value, percent }) => {
   if (isNaN(value)) return null;
   return (
-    <p>
-      {text} {value} {percent}
-    </p>
+    <tr>
+      <td>
+        <p>{text}</p>
+      </td>
+      <td>
+        <p>
+          {value} {percent}
+        </p>
+      </td>
+    </tr>
   );
 };
 
@@ -22,12 +29,16 @@ const Statistics = ({ good, neutral, bad, total, score }) => {
   return (
     <>
       <h1>statistics</h1>
-      <StatisticLine text="good" value={good} />
-      <StatisticLine text="neutral" value={neutral} />
-      <StatisticLine text="bad" value={bad} />
-      <StatisticLine text="all" value={total} />
-      <StatisticLine text="average" value={average} />
-      <StatisticLine text="positive" value={positive} percent="%" />
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={average} />
+          <StatisticLine text="positive" value={positive} percent="%" />
+        </tbody>
+      </table>
     </>
   );
 };
