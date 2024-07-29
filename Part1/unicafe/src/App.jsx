@@ -3,6 +3,7 @@ import { useState } from "react";
 const Header = ({ course }) => <h1>{course}</h1>;
 
 const Option = ({ option, count }) => {
+  if (isNaN(count)) return null;
   return (
     <p>
       {option} {count}
@@ -14,13 +15,18 @@ const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
-const Total = ({ good, neutral, bad }) => {
+const Statistics = ({ good, neutral, bad, total, score }) => {
+  const average = score / total;
+  const positive = (good / total) * 100;
   return (
     <>
       <h1>statistics</h1>
       <Option option="good" count={good} />
       <Option option="neutral" count={neutral} />
       <Option option="bad" count={bad} />
+      <Option option="all" count={total} />
+      <Option option="average" count={average} />
+      <Option option="positive" count={positive} />
     </>
   );
 };
@@ -30,17 +36,27 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [score, setScore] = useState(0);
 
   const handleGoodClick = () => {
-    setGood(good + 1);
+    const updatedGood = good + 1;
+    setGood(updatedGood);
+    setTotal(updatedGood + neutral + bad);
+    setScore(score + 1);
   };
 
   const handleNeutralClick = () => {
-    setNeutral(neutral + 1);
+    const updatedNeutral = neutral + 1;
+    setNeutral(updatedNeutral);
+    setTotal(updatedNeutral + good + bad);
   };
 
   const handleBadClick = () => {
-    setBad(bad + 1);
+    const updatedBad = bad + 1;
+    setBad(updatedBad);
+    setTotal(updatedBad + good + neutral);
+    setScore(score - 1);
   };
 
   return (
@@ -49,7 +65,13 @@ const App = () => {
       <Button handleClick={handleGoodClick} text="good" />
       <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text="bad" />
-      <Total good={good} neutral={neutral} bad={bad} />
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        total={total}
+        score={score}
+      />
     </div>
   );
 };
