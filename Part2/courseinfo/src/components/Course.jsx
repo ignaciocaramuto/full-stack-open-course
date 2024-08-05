@@ -16,11 +16,17 @@ const Content = ({ parts }) => {
   );
 };
 
+const Total = ({ parts }) => {
+  const total = parts.reduce((acum, curr) => acum + curr.exercises, 0);
+  return <b>Total of {total} exercises</b>;
+};
+
 const Course = ({ course }) => {
   return (
     <div>
       <Header title={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
