@@ -6,6 +6,13 @@ const App = () => {
 
   const addNewPhone = (event) => {
     event.preventDefault();
+
+    const repeatedPerson = persons.findIndex(({ name }) => name === newName);
+    if (repeatedPerson !== -1) {
+      window.alert(`${newName} is already added to phonebook`);
+      return;
+    }
+
     const newPerson = {
       name: newName,
     };
