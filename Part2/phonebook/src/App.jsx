@@ -25,6 +25,15 @@ const App = () => {
     setNewNumber("");
   };
 
+  const handleFilterChange = (event) => {
+    const newFilter = event.target.value;
+    const filteredPersons = persons.filter(({ name }) =>
+      name.toLowerCase().includes(newFilter.toLowerCase())
+    );
+
+    setPersons(filteredPersons);
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -36,6 +45,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with: <input onChange={handleFilterChange} />
+      </div>
+      <h2>add a new</h2>
       <form onSubmit={addNewPhone}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
