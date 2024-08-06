@@ -52,8 +52,6 @@ const App = () => {
   };
 
   const deletePerson = (personId) => {
-    console.log(personId);
-
     const person = persons.find(({ id }) => id === personId);
 
     if (!person) {
