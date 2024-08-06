@@ -16,8 +16,31 @@ const App = () => {
   const addNewPhone = (event) => {
     event.preventDefault();
 
-    const repeatedPerson = persons.findIndex(({ name }) => name === newName);
-    if (repeatedPerson !== -1) {
+    const repeatedPerson = persons.find(({ name }) => name === newName);
+    if (repeatedPerson && repeatedPerson.number !== newNumber) {
+      if (
+        !window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        return;
+      }
+
+      const updatedPerson = { ...repeatedPerson, number: newNumber };
+
+      personsService
+        .update(repeatedPerson.id, updatedPerson)
+        .then((response) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== repeatedPerson.id ? person : response
+            )
+          );
+        });
+      return;
+    }
+
+    if (repeatedPerson) {
       window.alert(`${newName} is already added to phonebook`);
       return;
     }
