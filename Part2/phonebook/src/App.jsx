@@ -51,6 +51,23 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const deletePerson = (personId) => {
+    console.log(personId);
+
+    const person = persons.find(({ id }) => id === personId);
+
+    if (!person) {
+      window.alert(`${person.name} doesn't exist`);
+      return;
+    }
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService.deletePerson(person.id).then(() => {
+        setPersons(persons.filter((personMap) => personMap.id !== person.id));
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +81,7 @@ const App = () => {
         addNewPhone={addNewPhone}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={persons} deletePerson={deletePerson} />
     </div>
   );
 };
