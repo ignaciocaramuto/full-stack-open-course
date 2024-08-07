@@ -3,15 +3,24 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personsService from "./services/persons";
+import Notification from "./components/Notification.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((persons) => setPersons(persons));
   }, []);
+
+  const setNotification = (message) => {
+    setNotificationMessage(message);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
+  };
 
   const addNewPhone = (event) => {
     event.preventDefault();
@@ -36,6 +45,7 @@ const App = () => {
               person.id !== repeatedPerson.id ? person : response
             )
           );
+          setNotification(`Updated ${newName}`);
         });
       return;
     }
@@ -54,6 +64,7 @@ const App = () => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
+      setNotification(`Added ${newName}`);
     });
   };
 
@@ -92,6 +103,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
