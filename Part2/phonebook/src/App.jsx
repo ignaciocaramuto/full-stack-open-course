@@ -9,14 +9,14 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notification, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((persons) => setPersons(persons));
   }, []);
 
-  const setNotification = (message) => {
-    setNotificationMessage(message);
+  const setNotification = (message, type) => {
+    setNotificationMessage({ message, type });
     setTimeout(() => {
       setNotificationMessage(null);
     }, 5000);
@@ -88,22 +88,27 @@ const App = () => {
   const deletePerson = (personId) => {
     const person = persons.find(({ id }) => id === personId);
 
-    if (!person) {
-      window.alert(`${person.name} doesn't exist`);
-      return;
-    }
-
     if (window.confirm(`Delete ${person.name}?`)) {
-      personsService.deletePerson(person.id).then(() => {
-        setPersons(persons.filter((personMap) => personMap.id !== person.id));
-      });
+      personsService
+        .deletePerson(person.id)
+        .then(() => {
+          setPersons(persons.filter((personMap) => personMap.id !== person.id));
+        })
+        .catch((error) => {
+          if (error.response.status === 404) {
+            setNotification(
+              `Information of ${person.name} has already been removed from server`,
+              "error"
+            );
+          }
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notification} />
       <Filter handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
