@@ -60,8 +60,8 @@ const App = () => {
       number: newNumber,
     };
 
-    personsService.create(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
+    personsService.create(newPerson).then(() => {
+      setPersons(persons.concat(newPerson));
       setNewName("");
       setNewNumber("");
       setNotification(`Added ${newName}`);
