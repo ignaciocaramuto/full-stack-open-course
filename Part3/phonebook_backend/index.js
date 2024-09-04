@@ -1,6 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const Person = require("./models/person");
 
 morgan.token("body", (req) => {
   return JSON.stringify(req.body);
@@ -12,60 +14,36 @@ app.use(
 );
 app.use(express.static("dist"));
 
-let phonebook = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-
-const generateId = () => {
-  return Math.floor(Math.random() * 10000) + 1;
-};
-
 app.get("/info", (request, response) => {
-  response.send(
-    "<p>Phonebook has info for " +
-      phonebook.length +
-      " people</p><p>The current time is " +
-      new Date() +
-      "</p>"
+  Person.find({}).then((person) =>
+    response.send(
+      "<p>Phonebook has info for " +
+        person.length +
+        " people</p><p>The current time is " +
+        new Date() +
+        "</p>"
+    )
   );
 });
 
 app.get("/api/persons", (request, response) => {
-  response.json(phonebook);
+  Person.find({}).then((person) => {
+    response.json(person);
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {
   const { id } = request.params;
-  const person = phonebook.find((person) => person.id === id);
-  if (!person) {
-    return response.status(404).end();
-  }
-  response.json(person);
+  Person.findById(id).then((person) => {
+    response.json(person);
+  });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
   const { id } = request.params;
-  phonebook = phonebook.filter((person) => person.id !== id);
-  response.status(204).end();
+  Person.findByIdAndDelete(id).then(() => {
+    response.status(204).end();
+  });
 });
 
 app.post("/api/persons", (request, response) => {
@@ -76,26 +54,17 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const person = phonebook.find((person) => person.name === name);
-
-  if (person) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
-
-  const newPerson = {
-    id: generateId(),
+  const newPerson = new Person({
     name,
     number,
-  };
+  });
 
-  phonebook = phonebook.concat(newPerson);
-
-  response.status(201).json(person);
+  newPerson.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
