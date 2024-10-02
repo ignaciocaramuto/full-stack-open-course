@@ -48,4 +48,28 @@ const mostBlogs = (blogs) => {
     return { author: mostFrequentAuthor, blogs: mostBlogs }
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
+const mostLikes = (blogs) => {
+    if (!blogs.length) {
+        return null
+    }
+
+    let authorWithMostLikes = '';
+    let mostLikes = 0;
+
+    for (const blog of blogs) {
+        if (blog.likes > mostLikes) {
+            mostLikes = blog.likes
+            authorWithMostLikes = blog.author
+        }
+    }
+
+    return { author: authorWithMostLikes, likes: mostLikes }
+}
+
+module.exports = {
+    dummy,
+    totalLikes,
+    favoriteBlog,
+    mostBlogs,
+    mostLikes
+}
