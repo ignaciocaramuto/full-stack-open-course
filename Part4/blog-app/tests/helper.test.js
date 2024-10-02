@@ -1,7 +1,7 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
-const { listWithOneBlog, biggerList } = require('./data/dummy-blogs')
+const { listWithOneBlog, blogs } = require('./data/dummy-blogs')
 
 test('dummy returns one', () => {
     const blogs = []
@@ -22,8 +22,8 @@ describe('total likes', () => {
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = listHelper.totalLikes(biggerList)
-        assert.strictEqual(result, 25)
+        const result = listHelper.totalLikes(blogs)
+        assert.strictEqual(result, 36)
     })
 })
 
@@ -44,10 +44,33 @@ describe('favorite blog', () => {
 
     test('of a bigger list is calculated right', () => {
         const result = {
-            title: 'Clean Code: A Handbook of Agile Software Craftsmanship',
-            author: 'Robert C. Martin',
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
             likes: 12
         }
-        assert.deepStrictEqual(listHelper.favoriteBlog(biggerList), result)
+        assert.deepStrictEqual(listHelper.favoriteBlog(blogs), result)
+    })
+})
+
+describe('most blogs', () => {
+
+    test('of empty list is undefined', () => {
+        assert.strictEqual(listHelper.mostBlogs([]), null)
+    })
+
+    test('when list has only one blog equals the blog', () => {
+        const result = {
+            author: 'Edsger W. Dijkstra',
+            blogs: 1
+        }
+        assert.deepStrictEqual(listHelper.mostBlogs(listWithOneBlog), result)
+    })
+
+    test('of a bigger list is calculated right', () => {
+        const result = {
+            author: "Robert C. Martin",
+            blogs: 3
+        }
+        assert.deepStrictEqual(listHelper.mostBlogs(blogs), result)
     })
 })

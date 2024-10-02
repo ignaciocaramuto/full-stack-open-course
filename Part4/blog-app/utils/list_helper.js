@@ -21,4 +21,31 @@ const favoriteBlog = (blogs) => {
     }
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = (blogs) => {
+    if (!blogs.length) {
+        return null
+    }
+
+    const blogCount = {}
+    let mostBlogs = 0
+    let mostFrequentAuthor = ''
+
+    for (const blog of blogs) {
+        if (blogCount[blog.author]) {
+            blogCount[blog.author] += 1
+        } else {
+            blogCount[blog.author] = 1
+        }
+    }
+
+    for (const author in blogCount) {
+        if (blogCount[author] > mostBlogs) {
+            mostFrequentAuthor = author
+            mostBlogs = blogCount[author]
+        }
+    }
+
+    return { author: mostFrequentAuthor, blogs: mostBlogs }
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
