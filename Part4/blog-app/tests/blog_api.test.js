@@ -74,6 +74,23 @@ test('blog without title is not added', async () => {
     assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
 })
 
+test('blog without url is not added', async () => {
+    const newBlog = {
+        title: "Canonical string reduction",
+        author: "Edsger W. Dijkstra",
+        likes: 12,
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  
+    const blogsAtEnd = await blogsInDb()
+  
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
+})
+
 test('blogs unique identifier is called id', async () => {
     const blogsAtEnd = await blogsInDb()
     assert.ok(blogsAtEnd.every((blog) => blog.id))
