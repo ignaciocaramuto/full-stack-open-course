@@ -79,6 +79,20 @@ test('blogs unique identifier is called id', async () => {
     assert.ok(blogsAtEnd.every((blog) => blog.id))
 })
 
+test('blog created without likes defaults value to 0', async () => {
+    const newBlog = {
+        title: "Canonical string reduction",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+    }
+
+    await api.post('/api/blogs').send(newBlog)
+
+    const blogsAtEnd = await blogsInDb()
+
+    assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+})
+
 afterEach(async () => {
   await mongoose.connection.close()
 })
