@@ -6,7 +6,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const { MONGODB_URI } = require('../utils/config')
-const { initialBlogs, nonExistingId, blogsInDb } = require('./test_helper.js')
+const { initialBlogs, blogsInDb } = require('./test_helper.js')
 
 beforeEach(async () => {  
     await mongoose.connect(MONGODB_URI)
