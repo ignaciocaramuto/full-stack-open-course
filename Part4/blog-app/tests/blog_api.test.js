@@ -90,6 +90,8 @@ test('blog without url is not added', async () => {
 
 test('blogs unique identifier is called id', async () => {
     const blogsAtEnd = await blogsInDb()
+    console.log(blogsAtEnd);
+    
     assert.ok(blogsAtEnd.every((blog) => blog.id))
 })
 
@@ -118,6 +120,37 @@ test('deletion of a blog is successful', async () => {
     const blogsAtEnd = await blogsInDb()
     
     assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1)
+})
+
+test('can update a blog', async () => {
+    const blogsAtStart = await blogsInDb()
+    const id = blogsAtStart[0].id
+    const blog = blogsAtStart[0]
+    blog.likes = 15
+
+    await api
+        .put(`/api/blogs/${id}`)
+        .send(blog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await blogsInDb()
+    
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
+    assert.strictEqual(blogsAtEnd[0].likes, blog.likes)
+})
+
+test('cannot update a blog without likes property', async () => {
+    const blogsAtStart = await blogsInDb()
+
+    await api
+        .put(`/api/blogs/${blogsAtStart[0].id}`)
+        .send({})
+        .expect(400)
+
+    const blogsAtEnd = await blogsInDb()
+    
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
 })
 
 afterEach(async () => {
