@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, afterEach } = require('node:test')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
 const mongoose = require('mongoose')
@@ -72,8 +72,13 @@ test('blog without title is not added', async () => {
     const blogsAtEnd = await blogsInDb()
   
     assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
-  })
+})
 
-after(async () => {
+test('blogs unique identifier is called id', async () => {
+    const blogsAtEnd = await blogsInDb()
+    assert.ok(blogsAtEnd.every((blog) => blog.id))
+})
+
+afterEach(async () => {
   await mongoose.connection.close()
 })
