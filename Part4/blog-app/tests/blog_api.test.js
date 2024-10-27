@@ -11,10 +11,7 @@ const { initialBlogs, nonExistingId, blogsInDb } = require('./test_helper.js')
 beforeEach(async () => {  
     await mongoose.connect(MONGODB_URI)
     await Blog.deleteMany({})
-    for (const blog of initialBlogs) {
-        const blogObject = new Blog(blog)
-        await blogObject.save()
-    }
+    await Blog.insertMany(initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -108,6 +105,19 @@ test('blog created without likes defaults value to 0', async () => {
     const blogsAtEnd = await blogsInDb()
 
     assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+})
+
+test('deletion of a blog is successful', async () => {
+    const blogsAtStart = await blogsInDb()
+    const idToDelete = blogsAtStart[0].id
+
+    await api
+        .delete(`/api/blogs/${idToDelete}`)
+        .expect(204)
+
+    const blogsAtEnd = await blogsInDb()
+    
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1)
 })
 
 afterEach(async () => {
