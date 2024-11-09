@@ -1,24 +1,35 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user.js')
 
 blogsRouter.get('', async (request, response) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1});
     response.json(blogs)
 })
 
 blogsRouter.post('', async (request, response) => {
-    const blog = new Blog(request.body)
+    const { title, url, author, likes } = request.body
 
-    if (!blog.title || !blog.url || !blog.author) {
+    if (!title || !url || !author) {
         return response.status(400).json({ error: 'title, author, and url are required' })
     }
 
-    if (!blog.likes) {
-        blog.likes = 0
-    }
+    const user = (await User.find({})).at(0)
 
-    const result = await blog.save();
-    response.status(201).json(result)
+    const blog = new Blog({
+        title,
+        url,
+        author,
+        likes: likes ?? 0,
+        user: user.id
+    })
+
+    const savedBlog = await blog.save();
+
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+
+    response.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
