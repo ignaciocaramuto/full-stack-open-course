@@ -7,7 +7,6 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
-const { MONGODB_URI } = require('../utils/config')
 const { usersInDb } = require('./test_helper.js')
 
 describe('when there is initially one user in db', () => {
