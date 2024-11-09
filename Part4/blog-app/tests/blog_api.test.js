@@ -90,7 +90,6 @@ test('blog without url is not added', async () => {
 
 test('blogs unique identifier is called id', async () => {
     const blogsAtEnd = await blogsInDb()
-    console.log(blogsAtEnd);
     
     assert.ok(blogsAtEnd.every((blog) => blog.id))
 })
