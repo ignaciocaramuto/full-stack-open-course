@@ -1,22 +1,14 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user.js')
-const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1});
     response.json(blogs)
 })
 
-blogsRouter.post('', async (request, response) => {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-
-    const user = await User.findById(decodedToken.id)
-
+blogsRouter.post('', userExtractor, async (request, response) => {
+    const { user } = request
     const { title, url, author, likes } = request.body
 
     if (!title || !url || !author) {
@@ -39,13 +31,8 @@ blogsRouter.post('', async (request, response) => {
     response.status(201).json(savedBlog)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+    const { user } = request
     const { id } = request.params
     const blog = await Blog.findById(id)
 
@@ -53,7 +40,7 @@ blogsRouter.delete('/:id', async (request, response) => {
         return response.status(404).json({ error: `blog with id ${id} doesn't exist in db` })
     }
 
-    if (blog.user.toString() !== decodedToken.id.toString()) {
+    if (blog.user.toString() !== user.id.toString()) {
         return response.status(401).json({ error: `blog doesn't belong to user` })
     }
 
@@ -62,7 +49,8 @@ blogsRouter.delete('/:id', async (request, response) => {
     response.status(204).end()
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', userExtractor, async (request, response) => {
+    const { user } = request
     const { id } = request.params
     const { likes } = request.body
 
@@ -70,6 +58,10 @@ blogsRouter.put('/:id', async (request, response) => {
 
     if (!blog) {
         return response.status(404).json({ error: `blog with id ${id} doesn't exist in db` })
+    }
+
+    if (blog.user.toString() !== user.id.toString()) {
+        return response.status(401).json({ error: `blog doesn't belong to user` })
     }
 
     if (!likes) {
