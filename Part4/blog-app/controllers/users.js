@@ -10,11 +10,11 @@ userRouter.get('', async (request, response) => {
 userRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
-  if (!username ) {
+  if (!username) {
     return response.status(400).json({ error: 'username missing' })
   }
 
-  if (!password ) {
+  if (!password) {
     return response.status(400).json({ error: 'password missing' })
   }
 
