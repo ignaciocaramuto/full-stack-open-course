@@ -4,27 +4,34 @@ import blogService from './services/blogs'
 import loginService from './services/login.js'
 import Button from './components/Button.jsx'
 import NewBlogForm from './components/NewBlogForm.jsx'
+import Notification from './components/Notification.jsx'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotificationMessage] = useState(null)
 
   const logOut = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
   }
 
+  const setNotification = (message, type) => {
+    setNotificationMessage({ message, type });
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
+  };
+
   const handleNewBlog = async (blogObject) => {
-    event.preventDefault()
-    console.log('adding blog', blogObject);
-    
     try {
       await blogService.create(blogObject)
       setBlogs(blogs.concat(blogObject))
+      setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
     } catch (exception) {
-      console.error(exception)
+      setNotification(exception.response.data.erro, "error")
     }
   }
 
@@ -55,17 +62,19 @@ const App = () => {
         'loggedUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
+      setNotification('User logged in successfully')
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      console.error(exception);
+    } catch (exception) {  
+      setNotification(exception.response.data.error, "error")
     }
   }
 
   if (user === null) {
     return (
       <div>
+        <Notification notification={notification} />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -94,6 +103,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <Button handleClick={logOut} text="logout"  />
