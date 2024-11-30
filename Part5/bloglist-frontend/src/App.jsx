@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login.js'
 import Button from './components/Button.jsx'
+import NewBlogForm from './components/NewBlogForm.jsx'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,7 +14,19 @@ const App = () => {
   const logOut = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
-  };
+  }
+
+  const handleNewBlog = async (blogObject) => {
+    event.preventDefault()
+    console.log('adding blog', blogObject);
+    
+    try {
+      await blogService.create(blogObject)
+      setBlogs(blogs.concat(blogObject))
+    } catch (exception) {
+      console.error(exception)
+    }
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -84,6 +97,9 @@ const App = () => {
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <Button handleClick={logOut} text="logout"  />
+
+      <NewBlogForm handleNewBlog={handleNewBlog} />
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
