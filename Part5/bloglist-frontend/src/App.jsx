@@ -32,9 +32,20 @@ const App = () => {
       setBlogs(blogs.concat(blogObject))
       setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
     } catch (exception) {
-      setNotification(exception.response.data.erro, "error")
+      setNotification(exception.response.data.error, "error")
     }
   }
+
+    const handleUpdate = async (blog) => {
+      try {
+        const blogUpdated = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
+        const blogsUpdated = blogs.map(blog => blog.id === blogUpdated.id ? blogUpdated : blog)
+        setBlogs(blogsUpdated)
+      }
+      catch (exception) {
+        console.error(exception)
+      }
+    }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -114,7 +125,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} />
       )}
     </div>
   )
