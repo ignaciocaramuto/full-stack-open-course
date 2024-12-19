@@ -32,7 +32,7 @@ const Blog = ({ blog, handleUpdate }) => {
         <p>{ blog.url }</p>
         <p>likes: { blog.likes }</p>
         <button onClick={() => onLikeClick()}>like</button>
-        <p>{ blog.author }</p>
+        <p>{ blog.user.name }</p>
         <button onClick={toggleVisibility}>hide</button>
       </div>
     </div>
