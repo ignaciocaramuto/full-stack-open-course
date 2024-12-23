@@ -71,7 +71,7 @@ blogsRouter.put('/:id', userExtractor, async (request, response) => {
     const result = await Blog.findByIdAndUpdate(id,
         { likes },
         { new: true, runValidators: true, context: 'query' }
-    )
+    ).populate('user', { username: 1, name: 1})
 
     response.status(200).json(result)
 })
