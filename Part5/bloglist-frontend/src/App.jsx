@@ -39,7 +39,9 @@ const App = () => {
     const handleUpdate = async (blog) => {
       try {
         const blogUpdated = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
-        const blogsUpdated = blogs.map(blog => blog.id === blogUpdated.id ? blogUpdated : blog)
+        const blogsUpdated = blogs
+          .map(blog => blog.id === blogUpdated.id ? blogUpdated : blog)
+          .sort((a, b) => b.likes - a.likes)
         setBlogs(blogsUpdated)
       }
       catch (exception) {
@@ -48,9 +50,10 @@ const App = () => {
     }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(sortedBlogs)
+    })  
   }, [])
 
   useEffect(() => {
