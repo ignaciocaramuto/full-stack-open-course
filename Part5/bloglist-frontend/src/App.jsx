@@ -36,18 +36,29 @@ const App = () => {
     }
   }
 
-    const handleUpdate = async (blog) => {
-      try {
-        const blogUpdated = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
-        const blogsUpdated = blogs
-          .map(blog => blog.id === blogUpdated.id ? blogUpdated : blog)
-          .sort((a, b) => b.likes - a.likes)
-        setBlogs(blogsUpdated)
-      }
-      catch (exception) {
-        console.error(exception)
-      }
+  const handleUpdate = async (blog) => {
+    try {
+      const blogUpdated = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
+      const blogsUpdated = blogs
+        .map(blog => blog.id === blogUpdated.id ? blogUpdated : blog)
+        .sort((a, b) => b.likes - a.likes)
+      setBlogs(blogsUpdated)
     }
+    catch (exception) {
+      console.error(exception)
+    }
+  }
+
+  const handleRemove = async (id) => {
+    try {
+      await blogService.remove(id)
+      const blogsUpdated = blogs.filter(blog => blog.id !== id).sort((a, b) => b.likes - a.likes)
+      setBlogs(blogsUpdated)
+    }
+    catch (exception) {
+      console.error(exception)
+    }
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -128,7 +139,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} />
+        <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} handleRemove={handleRemove} />
       )}
     </div>
   )
