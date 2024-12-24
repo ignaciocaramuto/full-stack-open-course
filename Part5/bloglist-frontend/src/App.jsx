@@ -9,7 +9,7 @@ import Togglable from './components/Togglable.jsx'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotificationMessage] = useState(null)
@@ -20,11 +20,11 @@ const App = () => {
   }
 
   const setNotification = (message, type) => {
-    setNotificationMessage({ message, type });
+    setNotificationMessage({ message, type })
     setTimeout(() => {
-      setNotificationMessage(null);
-    }, 5000);
-  };
+      setNotificationMessage(null)
+    }, 5000)
+  }
 
   const handleNewBlog = async (blogObject) => {
     try {
@@ -32,7 +32,7 @@ const App = () => {
       setBlogs(blogs.concat(blogObject))
       setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
     } catch (exception) {
-      setNotification(exception.response.data.error, "error")
+      setNotification(exception.response.data.error, 'error')
     }
   }
 
@@ -64,7 +64,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(sortedBlogs)
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -92,8 +92,8 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {  
-      setNotification(exception.response.data.error, "error")
+    } catch (exception) {
+      setNotification(exception.response.data.error, 'error')
     }
   }
 
@@ -105,21 +105,21 @@ const App = () => {
         <form onSubmit={handleLogin}>
           <div>
             username
-              <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-              />
+            <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
           </div>
           <div>
             password
-              <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-              />
+            <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
           </div>
           <button type="submit">login</button>
         </form>
@@ -132,7 +132,7 @@ const App = () => {
       <Notification notification={notification} />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
-      <Button handleClick={logOut} text="logout"  />
+      <Button handleClick={logOut} text="logout" />
 
       <Togglable buttonLabel="new blog">
         <NewBlogForm handleNewBlog={handleNewBlog} />

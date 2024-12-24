@@ -10,7 +10,7 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     setVisible(!visible)
   }
 
-  const onLikeClick = () => {    
+  const onLikeClick = () => {
     handleUpdate(blog)
   }
 
@@ -18,7 +18,7 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     const confirm = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
 
     if (!confirm) return
-  
+
     handleRemove(id)
   }
 
@@ -34,14 +34,14 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
         <span>{blog.title} {blog.author}</span>
-          <button onClick={toggleVisibility}>view</button>
+        <button onClick={toggleVisibility}>view</button>
       </div>
       <div style={showWhenVisible}>
         <div>
           <span>{ blog.url }</span>
           <button onClick={toggleVisibility}>hide</button>
         </div>
-        
+
         <p>likes: { blog.likes }</p>
         <button onClick={() => onLikeClick()}>like</button>
         <p>{ blog.user.name }</p>
