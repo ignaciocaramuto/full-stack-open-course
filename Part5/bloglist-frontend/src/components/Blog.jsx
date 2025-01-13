@@ -31,22 +31,20 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+    <div style={blogStyle} className='blog'>
+      <div style={hideWhenVisible} className='blogHeader'>
         <span>{blog.title} {blog.author}</span>
         <button onClick={toggleVisibility}>view</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="togglableContent">
         <div>
-          <span>{ blog.url }</span>
+          <span>{blog.url}</span>
           <button onClick={toggleVisibility}>hide</button>
         </div>
-
-        <p>likes: { blog.likes }</p>
+        <p>likes: {blog.likes}</p>
         <button onClick={() => onLikeClick()}>like</button>
-        <p>{ blog.user.name }</p>
+        <p>{blog.user.name}</p>
         <button onClick={() => onRemoveClick(blog.id)}>remove</button>
-
       </div>
     </div>
   )
