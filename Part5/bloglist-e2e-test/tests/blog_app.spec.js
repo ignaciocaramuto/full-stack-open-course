@@ -73,7 +73,6 @@ describe('Blog app', () => {
       })
 
       test('blogs are arranged in the order acording to the likes', async ({ page }) => {
-
         const blogElement1 = page.getByText('title1 author1').locator('..').locator('..');
         const blogElement2 = page.getByText('title2 author2').locator('..').locator('..');
 

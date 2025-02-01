@@ -41,7 +41,7 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
           <span>{blog.url}</span>
           <button onClick={toggleVisibility}>hide</button>
         </div>
-        <p>likes: {blog.likes}</p>
+        <p className="likes">likes: {blog.likes}</p>
         <button onClick={() => onLikeClick()}>like</button>
         <p>{blog.user.name}</p>
         <button onClick={() => onRemoveClick(blog.id)}>remove</button>

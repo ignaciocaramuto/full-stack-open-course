@@ -26,24 +26,27 @@ const NewBlogForm = ({ handleNewBlog }) => {
       <h2>create new</h2>
       <form onSubmit={onSubmit}>
         <div>
-            title:
+          title:
           <input
+            data-testid='title'
             name="name"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
-            author:
+          author:
           <input
+            data-testid='author'
             name="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
-            url:
+          url:
           <input
+            data-testid='url'
             name="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
