@@ -9,9 +9,13 @@ const AnecdoteForm = () => {
 
   const newNoteMutation = useMutation({
     mutationFn: createAnecdote,
-    onSuccess: () => {
+    onSuccess: (anecdote) => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+      setNotification(`Added ${anecdote.content}`)
     },
+    onError: (error) => {
+      setNotification(error.response.data.error)
+    }
   })
 
   const setNotification = (message) => {
@@ -24,7 +28,6 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newNoteMutation.mutate({ content, votes: 0 })
-    setNotification(`Added ${content}`)
   }
 
   return (
