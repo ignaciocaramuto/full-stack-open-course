@@ -1,7 +1,15 @@
 import axios from "axios";
+import blogReducer, { setBlogs } from "../reducers/blogReducer";
+import { configureStore } from "@reduxjs/toolkit";
 const baseUrl = "/api/blogs";
 
 let token = null;
+
+const store = configureStore({
+  reducer: {
+    blogs: blogReducer,
+  }
+})
 
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
@@ -9,7 +17,7 @@ const setToken = (newToken) => {
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
-  return response.data;
+  return response.data
 };
 
 const create = async (newObject) => {

@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login.js";
 import Button from "./components/Button.jsx";
 import NewBlogForm from "./components/NewBlogForm.jsx";
 import Notification from "./components/Notification.jsx";
 import Togglable from "./components/Togglable.jsx";
+import { useDispatch } from "react-redux";
+import BlogList from "./components/BlogList.jsx";
+import { initializeBlogs } from "./reducers/blogReducer.js";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [notification, setNotificationMessage] = useState(null);
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [])
 
   const logOut = () => {
     window.localStorage.removeItem("loggedUser");
@@ -37,40 +44,6 @@ const App = () => {
       setNotification(exception.response.data.error, "error");
     }
   };
-
-  const handleUpdate = async (blog) => {
-    try {
-      const blogUpdated = await blogService.update(blog.id, {
-        ...blog,
-        likes: blog.likes + 1,
-      });
-      const blogsUpdated = blogs
-        .map((blog) => (blog.id === blogUpdated.id ? blogUpdated : blog))
-        .sort((a, b) => b.likes - a.likes);
-      setBlogs(blogsUpdated);
-    } catch (exception) {
-      console.error(exception);
-    }
-  };
-
-  const handleRemove = async (id) => {
-    try {
-      await blogService.remove(id);
-      const blogsUpdated = blogs
-        .filter((blog) => blog.id !== id)
-        .sort((a, b) => b.likes - a.likes);
-      setBlogs(blogsUpdated);
-    } catch (exception) {
-      console.error(exception);
-    }
-  };
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
-      setBlogs(sortedBlogs);
-    });
-  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
@@ -144,16 +117,7 @@ const App = () => {
         <NewBlogForm handleNewBlog={handleNewBlog} />
       </Togglable>
 
-      <div data-testid="blogs">
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleUpdate={handleUpdate}
-            handleRemove={handleRemove}
-          />
-        ))}
-      </div>
+      <BlogList />
     </div>
   );
 };
