@@ -33,18 +33,6 @@ const App = () => {
     }, 5000);
   };
 
-  const handleNewBlog = async (blogObject) => {
-    try {
-      const blog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(blog));
-      setNotification(
-        `A new blog ${blogObject.title} by ${blogObject.author} added`,
-      );
-    } catch (exception) {
-      setNotification(exception.response.data.error, "error");
-    }
-  };
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
     if (loggedUserJSON) {
@@ -114,7 +102,7 @@ const App = () => {
       <Button handleClick={logOut} text="logout" />
 
       <Togglable buttonLabel="new blog">
-        <NewBlogForm handleNewBlog={handleNewBlog} />
+        <NewBlogForm />
       </Togglable>
 
       <BlogList />
