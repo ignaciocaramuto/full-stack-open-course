@@ -13,7 +13,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notification, setNotificationMessage] = useState(null);
 
   const dispatch = useDispatch()
 
@@ -24,13 +23,6 @@ const App = () => {
   const logOut = () => {
     window.localStorage.removeItem("loggedUser");
     setUser(null);
-  };
-
-  const setNotification = (message, type) => {
-    setNotificationMessage({ message, type });
-    setTimeout(() => {
-      setNotificationMessage(null);
-    }, 5000);
   };
 
   useEffect(() => {
@@ -53,19 +45,19 @@ const App = () => {
       });
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
       blogService.setToken(user.token);
-      setNotification("User logged in successfully");
+      // setNotification("User logged in successfully");
       setUser(user);
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setNotification(exception.response.data.error, "error");
+      // setNotification(exception.response.data.error, "error");
     }
   };
 
   if (user === null) {
     return (
       <div>
-        <Notification notification={notification} />
+        <Notification />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -96,7 +88,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification={notification} />
+      <Notification />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <Button handleClick={logOut} text="logout" />

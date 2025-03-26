@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addBlog } from "../reducers/blogReducer";
+import { notification } from "../reducers/notificationReducer";
 
 const NewBlogForm = () => {
   const [title, setTitle] = useState("");
@@ -11,7 +12,7 @@ const NewBlogForm = () => {
 
   const handleNewBlog = async (blogObject) => {
     dispatch(addBlog(blogObject))
-    // setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`,)    
+    dispatch(notification({ message: `A new blog ${blogObject.title} by ${blogObject.author} added` }, 5))
     // // setNotification(exception.response.data.error, "error");
   }
 
