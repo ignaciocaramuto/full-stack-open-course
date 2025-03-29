@@ -4,7 +4,6 @@ const Notification = () => {
 
   const notification = useSelector(state => state.notification)
 
-  console.log(notification)
   if (!notification) {
     return null;
   }

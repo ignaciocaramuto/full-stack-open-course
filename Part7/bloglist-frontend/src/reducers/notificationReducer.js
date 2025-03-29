@@ -12,7 +12,6 @@ const notificationSlice = createSlice({
 
 export const notification = (message, seconds) => {
   return dispatch => {
-    console.log(message)
     dispatch(setNotification(message))
 
     setTimeout(() => {
