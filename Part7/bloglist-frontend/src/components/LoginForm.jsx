@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "../reducers/userReducer";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
-import { setNotification } from "../reducers/notificationReducer";
+import { notification } from "../reducers/notificationReducer";
+import { Button, Form } from "react-bootstrap";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -20,38 +20,36 @@ const LoginForm = () => {
       dispatch(setUser(user));
       setUsername("");
       setPassword("");
-      dispatch(setNotification({ message: "User logged in successfully" }))
+      dispatch(notification({ message: "User logged in successfully" }, 5))
     } catch (exception) {
-      dispatch(setNotification({ message: exception.response.data.error, type: "erorr" }))
+      dispatch(notification({ message: exception.response.data.error, type: "erorr" }, 5))
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            data-testid="username"
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control
             type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
+            name="username"
+            onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
-        <div>
-          password
-          <input
-            data-testid="password"
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>password:</Form.Label>
+          <Form.Control
             type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          login
+        </Button>
+      </Form>
     </div>
   );
 };
